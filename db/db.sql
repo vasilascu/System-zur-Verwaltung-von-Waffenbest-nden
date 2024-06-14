@@ -1,4 +1,4 @@
-drop database if exists Waffenverwaltung;
+DROP DATABASE IF EXISTS Waffenverwaltung;
 
 -- Crearea bazei de date
 CREATE DATABASE Waffenverwaltung;
@@ -18,7 +18,8 @@ CREATE TABLE Administratoren (
 CREATE TABLE Lieferanten (
                              Lieferant_ID INT AUTO_INCREMENT PRIMARY KEY,
                              Name VARCHAR(100),
-                             Kontakt VARCHAR(100)
+                             Kontakt VARCHAR(100),
+                             Adresse VARCHAR(255) -- Adăugarea coloanei Adresse
 );
 
 -- Crearea tabelei Produkte
