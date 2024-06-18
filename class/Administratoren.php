@@ -1,36 +1,34 @@
 <?php
 
+// Klasse zur Verwaltung von Administratoren
 class Administratoren
 {
-    private int $id;
-    private string $name;
-    private string $email;
-    private string $password;
+    private int $id; // Attribut: ID des Administrators
+    private string $name; // Attribut: Name des Administrators
+    private string $email; // Attribut: E-Mail des Administrators
+    private string $password; // Attribut: Passwort-Hash des Administrators
 
-    /**
-     * @param int $id
-     * @param string $name
-     * @param string $email
-     * @param string $passwordhasch
-     */
+    // Konstruktor der Klasse Administratoren
     public function __construct(int $id, string $name, string $email, string $password)
     {
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
-        $this->passwordhasch = $password;
+        $this->password = $password;
     }
 
-    public static function dbcon():PDO
+    // Methode zur Herstellung der Datenbankverbindung
+    public static function dbcon(): PDO
     {
         $servername = "localhost";
         $username = "root";
         $password = "";
-        $dbname = "anwesenheit";
+        $dbname = "Waffenverwaltung";
         return new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     }
 
-    private static function create(int $id, string $name, string $email, string $password) : Administratoren
+    // Methode zur Erstellung eines neuen Administrators
+    public static function create(string $name, string $email, string $password): Administratoren
     {
         $con = self::dbcon();
         $sql = 'INSERT INTO administratoren (name, email, pwhash) VALUES (:name, :email, :pwhash)';
@@ -40,25 +38,34 @@ class Administratoren
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':pwhash', $pwhash);
         $stmt->execute();
-        return new Administratoren($id, $name, $email, $pwhash);
+        return new Administratoren($con->lastInsertId(), $name, $email, $pwhash);
     }
 
-    private static function fingById(int $id) : Administratoren
+    // Methode zur Suche eines Administrators nach E-Mail
+    public static function findByEmail(string $email): ?Administratoren
     {
         $con = self::dbcon();
-        $sql = 'SELECT * FROM administratoren WHERE id = :id';
+        $sql = 'SELECT * FROM administratoren WHERE email = :email';
         $stmt = $con->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':email', $email);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return new Administratoren($id, $result['name'], $result['email'], $result['pwhash']);
+        if ($result) {
+            return new Administratoren($result['ID'], $result['Name'], $result['email'], $result['pwhash']);
+        }
+        return null; // Rückgabe null, wenn kein Administrator gefunden wurde
     }
 
+    // Methode zur Überprüfung des Passworts
+    public function verifyPassword(string $password): bool
+    {
+        return password_verify($password, $this->password);
+    }
 
-
-
-
-
-
-
+    // Getter-Methode für die ID des Administrators
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }
+
