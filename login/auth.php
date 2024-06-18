@@ -22,7 +22,7 @@ function isAuthenticated(): bool
 }
 
 // Funktion zum Abmelden des Benutzers
-function logout()
+function logout(): void
 {
     session_destroy();
 }

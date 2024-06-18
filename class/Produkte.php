@@ -1,6 +1,6 @@
 <?php
 
-class Producke
+class Produkte
 {
     public int $product_id;
 
