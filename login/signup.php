@@ -1,6 +1,8 @@
 <?php
 // signup.php
-include 'config.php';
+//include 'config.php';
+use App\Administratoren;
+
 include '../class/Administratoren.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

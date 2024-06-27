@@ -1,9 +1,13 @@
 <?php
-// auth.php
-session_start();
-include 'config.php';
-include '../class/Administratoren.php';
+require __DIR__ . '/../vendor/autoload.php';
 
+use App\Administratoren;
+
+//include './class/Administratoren.php';
+include 'config.php';
+// auth.php
+
+session_start();
 // Funktion zum Einloggen eines Administrators
 function login($email, $password): bool
 {

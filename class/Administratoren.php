@@ -1,6 +1,8 @@
 <?php
-
+namespace App;
 // Klasse zur Verwaltung von Administratoren
+use PDO;
+
 class Administratoren
 {
     private int $id; // Attribut: ID des Administrators
@@ -51,7 +53,7 @@ class Administratoren
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
-            return new Administratoren($result['ID'], $result['Name'], $result['email'], $result['pwhash']);
+            return new Administratoren($result['id'], $result['name'], $result['email'], $result['pwhash']);
         }
         return null; // Rückgabe null, wenn kein Administrator gefunden wurde
     }
@@ -66,6 +68,20 @@ class Administratoren
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public static function getAll(): array
+    {
+        $con = self::dbcon();
+        $sql = 'SELECT * FROM administratoren';
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $administratoren = [];
+        foreach ($result as $row) {
+            $administratoren[] = new Administratoren($row['id'], $row['name'], $row['email'], $row['pwhash']);
+        }
+        return $administratoren;
     }
 }
 
